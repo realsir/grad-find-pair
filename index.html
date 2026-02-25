@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>./ FIND GRAD PAIR</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg0:#070A12;
+      --stroke: rgba(140,124,255,.28);
+      --text:#EAF0FF;
+      --muted:#A9B3D6;
+      --accent:#8C7CFF;
+      --ok:#47E6A2;
+      --shadow: 0 18px 90px rgba(0,0,0,.50);
+      --r: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--text);
+      background: radial-gradient(1100px 750px at 30% 20%, #141a3b 0%, #070a12 55%, #040610 100%);
+      overflow:hidden;
+      font-family:"Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    #bg{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
+    }
+
+    .floater{
+      position:absolute;
+      width:120px; height:120px;
+      border-radius:50%;
+      object-fit:cover;
+      overflow:hidden;
+      opacity:.18;
+      will-change:transform;
+      user-select:none;
+      -webkit-user-drag:none;
+      border: 1px solid rgba(234,240,255,.14);
+      box-shadow:
+        0 10px 40px rgba(0,0,0,.25),
+        0 0 0 4px rgba(140,124,255,.06);
+      filter:saturate(1.08) contrast(1.03);
+    }
+
+    .vignette{
+      position:fixed; inset:-2px;
+      pointer-events:none;
+      z-index:1;
+      background:
+        radial-gradient(900px 650px at 50% 45%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 55%),
+        radial-gradient(900px 650px at 20% 80%, rgba(140,124,255,.10) 0%, rgba(140,124,255,0) 60%),
+        radial-gradient(900px 650px at 80% 20%, rgba(71,230,162,.10) 0%, rgba(71,230,162,0) 60%);
+      mix-blend-mode: screen;
+    }
+
+    .stage{
+      position:relative;
+      z-index:2;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:26px;
+    }
+
+    .panel{
+      width:min(980px, 100%);
+      background: linear-gradient(180deg, rgba(10,14,30,.78), rgba(6,8,18,.72));
+      border:1px solid var(--stroke);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+
+    .inner{ padding:26px; }
+
+    h1{
+      margin:0 0 10px;
+      font-family:"Fraunces", serif;
+      font-size: clamp(40px, 5vw, 66px);
+      line-height:1.05;
+      letter-spacing:.5px;
+    }
+
+    p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:15.5px;
+      max-width:78ch;
+    }
+
+    a{
+      color:var(--text);
+      text-decoration:none;
+      border-bottom:1px dashed rgba(234,240,255,.45);
+    }
+
+    a:hover{ border-bottom-color: rgba(234,240,255,.9); }
+
+    .row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+
+    button{
+      font: inherit;
+      font-weight:700;
+      letter-spacing:.2px;
+      color:var(--text);
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:14px;
+      border:1px solid rgba(140,124,255,.35);
+      background: linear-gradient(180deg, rgba(140,124,255,.20), rgba(140,124,255,.08));
+      transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+      user-select:none;
+    }
+
+    button:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.65); }
+    button:active{ transform: translateY(0) scale(.99); }
+    button:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+
+    .meta{
+      margin-top:16px;
+      padding-top:12px;
+      border-top:1px solid rgba(140,124,255,.18);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      font-size:13px;
+      color: rgba(234,240,255,.72);
+    }
+
+    #game{ display:none; }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .top h2{
+      margin:0;
+      font-size:18px;
+      color:rgba(234,240,255,.92);
+      font-weight:700;
+    }
+
+    .top .info{
+      margin:2px 0 0;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap:10px;
+    }
+
+    @media (max-width: 860px){ .grid{ grid-template-columns: repeat(4, 1fr);} }
+    @media (max-width: 520px){ .grid{ grid-template-columns: repeat(3, 1fr);} }
+
+    .card{
+      aspect-ratio:1/1;
+      border-radius:16px;
+      border:1px solid rgba(140,124,255,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow: 0 10px 35px rgba(0,0,0,.25);
+      overflow:hidden;
+      position:relative;
+      cursor:pointer;
+      padding:0;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+
+    .card:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.55); }
+    .card:active{ transform: translateY(0) scale(.99); }
+    .card.matched{ border-color: rgba(71,230,162,.55); }
+    .card.locked{ cursor:default; opacity:.95; }
+
+    .back,.front{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      backface-visibility:hidden;
+      transition: transform 280ms ease;
+      transform-style:preserve-3d;
+    }
+
+    .back{
+      background:
+        radial-gradient(240px 160px at 30% 20%, rgba(140,124,255,.22) 0%, rgba(140,124,255,0) 55%),
+        radial-gradient(240px 160px at 80% 80%, rgba(71,230,162,.14) 0%, rgba(71,230,162,0) 55%),
+        linear-gradient(180deg, rgba(10,14,30,.80), rgba(6,8,18,.62));
+      border-radius:16px;
+    }
+
+    .mark{
+      font-weight:800;
+      letter-spacing:.6px;
+      font-size:12px;
+      color: rgba(234,240,255,.84);
+      text-transform:uppercase;
+      text-align:center;
+      padding:12px;
+    }
+
+    .mark small{
+      display:block;
+      margin-top:6px;
+      font-weight:600;
+      opacity:.75;
+      letter-spacing:.35px;
+      text-transform:none;
+    }
+
+    .front{ transform: rotateY(180deg); background: rgba(0,0,0,.14); }
+    .card img{ width:100%; height:100%; object-fit:cover; }
+    .card.revealed .back{ transform: rotateY(180deg); }
+    .card.revealed .front{ transform: rotateY(0deg); }
+
+    .nextWrap{
+      margin-top:16px;
+      display:none;
+      justify-content:flex-end;
+    }
+
+    @keyframes glowPulse{
+      0%   { box-shadow: 0 0 6px rgba(140,124,255,.25), 0 0 0 rgba(140,124,255,0); filter: brightness(1); }
+      50%  { box-shadow: 0 0 18px rgba(140,124,255,.55), 0 0 42px rgba(140,124,255,.25); filter: brightness(1.08); }
+      100% { box-shadow: 0 0 6px rgba(140,124,255,.25), 0 0 0 rgba(140,124,255,0); filter: brightness(1); }
+    }
+
+    .glow{
+      animation: glowPulse 1.25s ease-in-out infinite;
+      border-color: rgba(140,124,255,.70);
+    }
+
+    #ggWrap{
+      position:fixed; inset:0;
+      display:none;
+      place-items:center;
+      padding:22px;
+      z-index:80;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+    }
+
+    .ggPanel{
+      width:min(560px, 100%);
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(10,14,30,.92), rgba(6,8,18,.88));
+      border:1px solid rgba(140,124,255,.30);
+      box-shadow: 0 30px 120px rgba(0,0,0,.55);
+      padding:18px 18px 16px;
+    }
+
+    .ggTitle{
+      margin:0 0 8px;
+      font-family:"Fraunces", serif;
+      font-size:28px;
+      letter-spacing:.2px;
+      color:rgba(234,240,255,.96);
+    }
+
+    .ggText{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14.5px;
+    }
+
+    .ggRow{
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <main class="stage">
+    <section class="panel">
+      <div class="inner" id="landing">
+        <h1>./ FIND GRAD PAIR</h1>
+        <p>
+          Welcome to the game where you need to find pairs of grad pfp's. First of all, I want to say thank you to
+          <a href="https://x.com/miketwinks" target="_blank" rel="noreferrer noopener">j.mike</a>
+          for his BAAANGOOOOOR pfp's. Your task is very simple: find the matching pair for each PFP — that’s it. LFGRAD and enjoy.
+        </p>
+
+        <div class="row">
+          <button id="start">./ FIND PAIR</button>
+        </div>
+      </div>
+
+      <div class="inner" id="game">
+        <div class="top">
+          <div>
+            <h2 id="levelTitle">Level 1</h2>
+            <p class="info" id="hud">Matched: 0 / 7</p>
+          </div>
+          <div class="row" style="margin-top:0;">
+            <button id="restart">./ RESTART</button>
+            <button id="back">./ MENU</button>
+          </div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+
+        <div class="nextWrap" id="nextWrap">
+          <button id="nextLevel" class="glow">./ NEXT</button>
+        </div>
+
+        <div class="meta">
+          <span id="mini">Find all pairs to unlock next level.</span>
+          <span id="lvl">Level: 1 / 4</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="ggWrap" aria-hidden="true">
+    <div class="ggPanel" role="dialog" aria-modal="true">
+      <h3 class="ggTitle">./ Good Game</h3>
+      <p class="ggText">Congratulations, you found all the pairs.</p>
+      <div class="ggRow">
+        <button id="ggMenu">./ MENU</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const bg = document.getElementById('bg');
+  const FLOATERS = [];
+  const COUNT = 28;
+
+  function rand(min, max){ return Math.random() * (max-min) + min; }
+
+  function initBackground(){
+    bg.innerHTML = "";
+    FLOATERS.length = 0;
+
+    for(let i=1;i<=COUNT;i++){
+      const el = document.createElement('img');
+      el.className = "floater";
+      el.alt = "";
+      el.decoding = "async";
+      el.loading = "eager";
+      el.src = `grad-${i}.png`;
+
+      const size = rand(74, 168);
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.opacity = (0.10 + Math.random() * 0.16).toFixed(3);
+
+      const f = {
+        el,
+        size,
+        x: rand(0, window.innerWidth),
+        y: rand(0, window.innerHeight),
+        vx: rand(-16, 16),
+        vy: rand(-16, 16),
+        w: rand(0, Math.PI * 2),
+        ws: rand(0.4, 1.1),
+        amp: rand(6, 22),
+      };
+
+      bg.appendChild(el);
+      FLOATERS.push(f);
+    }
+  }
+
+  initBackground();
+
+  let last = performance.now();
+  function loop(t){
+    const dt = Math.min(0.05, (t-last)/1000);
+    last = t;
+
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    for(const f of FLOATERS){
+      f.w += dt * f.ws;
+
+      f.x += f.vx * dt * 10;
+      f.y += f.vy * dt * 10;
+
+      const ox = Math.cos(f.w) * f.amp;
+      const oy = Math.sin(f.w * 0.9) * f.amp;
+
+      if (f.x < -f.size) f.x = W + f.size;
+      if (f.x > W + f.size) f.x = -f.size;
+      if (f.y < -f.size) f.y = H + f.size;
+      if (f.y > H + f.size) f.y = -f.size;
+
+      f.el.style.transform = `translate3d(${(f.x+ox).toFixed(1)}px, ${(f.y+oy).toFixed(1)}px, 0)`;
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
+  window.addEventListener('resize', initBackground);
+
+  const landing = document.getElementById('landing');
+  const game = document.getElementById('game');
+
+  const startBtn = document.getElementById('start');
+  const restartBtn = document.getElementById('restart');
+  const backBtn = document.getElementById('back');
+
+  const grid = document.getElementById('grid');
+  const levelTitle = document.getElementById('levelTitle');
+  const hud = document.getElementById('hud');
+
+  const nextWrap = document.getElementById('nextWrap');
+  const nextLevelBtn = document.getElementById('nextLevel');
+  const mini = document.getElementById('mini');
+  const lvl = document.getElementById('lvl');
+
+  const ggWrap = document.getElementById('ggWrap');
+  const ggMenu = document.getElementById('ggMenu');
+
+  const LEVELS = [
+    { level: 1, imgs: [1,2,3,4,5,6,7] },
+    { level: 2, imgs: [8,9,10,11,12,13,14] },
+    { level: 3, imgs: [15,16,17,18,19,20,21] },
+    { level: 4, imgs: [22,23,24,25,26,27,28] },
+  ];
+
+  let levelIndex = 0;
+  let first = null;
+  let second = null;
+  let lock = false;
+  let matched = 0;
+
+  function shuffle(a){
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function setView(isGame){
+    landing.style.display = isGame ? "none" : "block";
+    game.style.display = isGame ? "block" : "none";
+  }
+
+  function updateHud(){
+    levelTitle.textContent = `Level ${LEVELS[levelIndex].level}`;
+    hud.textContent = `Matched: ${matched} / 7`;
+    lvl.textContent = `Level: ${LEVELS[levelIndex].level} / 4`;
+  }
+
+  function hideNext(){
+    nextWrap.style.display = "none";
+    mini.textContent = "Find all pairs to unlock next level.";
+  }
+
+  function showNext(){
+    nextWrap.style.display = "flex";
+    mini.textContent = "Level complete.";
+    if (levelIndex === LEVELS.length - 1) {
+      nextLevelBtn.textContent = "./ GG";
+    } else {
+      nextLevelBtn.textContent = "./ NEXT";
+    }
+  }
+
+  function buildLevel(){
+    first = null; second = null; lock = false;
+    matched = 0;
+    hideNext();
+    updateHud();
+
+    const ids = LEVELS[levelIndex].imgs;
+    const deck = shuffle([...ids, ...ids]);
+
+    grid.innerHTML = "";
+    for(const id of deck){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "card";
+      btn.dataset.id = String(id);
+
+      btn.innerHTML = `
+        <div class="back">
+          <div class="mark">./ FIND<small>Tap to reveal</small></div>
+        </div>
+        <div class="front">
+          <img src="grad-${id}.png" alt="PFP" draggable="false">
+        </div>
+      `;
+
+      btn.addEventListener("click", () => onPick(btn));
+      grid.appendChild(btn);
+    }
+  }
+
+  function reveal(card){ card.classList.add("revealed"); }
+  function conceal(card){ card.classList.remove("revealed"); }
+
+  function onPick(card){
+    if (lock) return;
+    if (card.classList.contains("matched")) return;
+    if (card === first) return;
+
+    reveal(card);
+
+    if (!first){
+      first = card;
+      return;
+    }
+
+    second = card;
+    lock = true;
+
+    const a = first.dataset.id;
+    const b = second.dataset.id;
+
+    if (a === b){
+      first.classList.add("matched","locked");
+      second.classList.add("matched","locked");
+
+      matched++;
+      updateHud();
+
+      first = null; second = null; lock = false;
+
+      if (matched === 7) showNext();
+      return;
+    }
+
+    setTimeout(() => {
+      conceal(first);
+      conceal(second);
+      first = null; second = null;
+      lock = false;
+    }, 520);
+  }
+
+  function openGG(){
+    ggWrap.style.display = "grid";
+    ggWrap.setAttribute("aria-hidden","false");
+  }
+
+  function closeGG(){
+    ggWrap.style.display = "none";
+    ggWrap.setAttribute("aria-hidden","true");
+  }
+
+  startBtn.addEventListener("click", () => {
+    levelIndex = 0;
+    closeGG();
+    setView(true);
+    buildLevel();
+  });
+
+  restartBtn.addEventListener("click", buildLevel);
+
+  backBtn.addEventListener("click", () => {
+    closeGG();
+    setView(false);
+  });
+
+  nextLevelBtn.addEventListener("click", () => {
+    if (matched !== 7) return;
+
+    if (levelIndex === LEVELS.length - 1){
+      openGG();
+      return;
+    }
+
+    levelIndex++;
+    buildLevel();
+  });
+
+  ggMenu.addEventListener("click", () => {
+    closeGG();
+    setView(false);
+  });
+
+  ggWrap.addEventListener("click", (e) => {
+    if (e.target === ggWrap) closeGG();
+  });
+</script>
+</body>
+</html>
+
