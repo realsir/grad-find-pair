@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -17,6 +17,7 @@
       --muted:#A9B3D6;
       --accent:#8C7CFF;
       --ok:#47E6A2;
+      --warn:#FFAB47;
       --shadow: 0 18px 90px rgba(0,0,0,.50);
       --r: 18px;
     }
@@ -28,7 +29,7 @@
       color:var(--text);
       background: radial-gradient(1100px 750px at 30% 20%, #141a3b 0%, #070a12 55%, #040610 100%);
       overflow:hidden;
-      font-family:"Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:"Press Start 2P", "Space Grotesk", monospace;
     }
 
     #bg{
@@ -90,47 +91,82 @@
 
     h1{
       margin:0 0 10px;
-      font-family:"Fraunces", serif;
-      font-size: clamp(40px, 5vw, 66px);
-      line-height:1.05;
-      letter-spacing:.5px;
+      font-family:"Press Start 2P", monospace;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height:1.1;
+      letter-spacing:2px;
+      text-shadow: 0 0 8px rgba(140,124,255,.4);
+      text-align:center;
     }
 
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.55;
-      font-size:15.5px;
+      line-height:1.4;
+      font-size:12px;
       max-width:78ch;
+      letter-spacing:1px;
     }
 
     a{
       color:var(--text);
       text-decoration:none;
       border-bottom:1px dashed rgba(234,240,255,.45);
+      font-size:11px;
     }
 
     a:hover{ border-bottom-color: rgba(234,240,255,.9); }
 
-    .row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
 
     button{
-      font: inherit;
-      font-weight:700;
-      letter-spacing:.2px;
+      font-family: inherit;
+      font-weight:400;
+      letter-spacing:1px;
       color:var(--text);
       cursor:pointer;
-      padding:12px 16px;
+      padding:12px 20px;
       border-radius:14px;
       border:1px solid rgba(140,124,255,.35);
       background: linear-gradient(180deg, rgba(140,124,255,.20), rgba(140,124,255,.08));
-      transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+      transition: transform .12s ease, border-color .12s ease, filter .12s ease, background .12s ease;
       user-select:none;
+      font-size:11px;
+      text-transform:uppercase;
+      line-height:1.1;
+      text-shadow: 0 0 4px rgba(0,0,0,.5);
+      white-space: nowrap;
+      min-width: 120px;
     }
 
     button:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.65); }
     button:active{ transform: translateY(0) scale(.99); }
-    button:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+      background: rgba(140,124,255,.04);
+    }
+
+    button.mode{
+      background: linear-gradient(180deg, rgba(71,230,162,.20), rgba(71,230,162,.08));
+      border-color: rgba(71,230,162,.35);
+      min-width: 140px;
+    }
+
+    button.mode:hover{ border-color: rgba(71,230,162,.65); }
+
+    button.warn{
+      background: linear-gradient(180deg, rgba(255,171,71,.20), rgba(255,171,71,.08));
+      border-color: rgba(255,171,71,.35);
+    }
+
+    button.warn:hover{ border-color: rgba(255,171,71,.65); }
 
     .meta{
       margin-top:16px;
@@ -140,8 +176,9 @@
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
-      font-size:13px;
+      font-size:10px;
       color: rgba(234,240,255,.72);
+      letter-spacing:1px;
     }
 
     #game{ display:none; }
@@ -157,16 +194,24 @@
 
     .top h2{
       margin:0;
-      font-size:18px;
+      font-size:14px;
       color:rgba(234,240,255,.92);
-      font-weight:700;
+      font-weight:400;
+      letter-spacing:1px;
     }
 
     .top .info{
       margin:2px 0 0;
-      font-size:13px;
+      font-size:9px;
       color:var(--muted);
+      letter-spacing:.5px;
     }
+
+    .stats{ display:flex; gap:16px; font-size:10px; }
+    .stat{ display:flex; flex-direction:column; align-items:center; min-width:50px; }
+    .statVal{ font-weight:400; font-size:14px; color:var(--text); letter-spacing:1px; }
+    .statWarn .statVal{ color:var(--warn); text-shadow: 0 0 4px rgba(255,171,71,.4); }
+    .statLabel{ font-size:8px; opacity:.8; letter-spacing:.5px; margin-top:2px; }
 
     .grid{
       display:grid;
@@ -188,6 +233,7 @@
       cursor:pointer;
       padding:0;
       transition: transform .12s ease, border-color .12s ease;
+      font-family:"Press Start 2P", monospace;
     }
 
     .card:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.55); }
@@ -212,22 +258,22 @@
     }
 
     .mark{
-      font-weight:800;
-      letter-spacing:.6px;
-      font-size:12px;
+      font-weight:400;
+      letter-spacing:1px;
+      font-size:9px;
       color: rgba(234,240,255,.84);
       text-transform:uppercase;
       text-align:center;
       padding:12px;
+      line-height:1.1;
     }
 
     .mark small{
       display:block;
-      margin-top:6px;
-      font-weight:600;
+      margin-top:4px;
+      font-size:7px;
       opacity:.75;
-      letter-spacing:.35px;
-      text-transform:none;
+      letter-spacing:.3px;
     }
 
     .front{ transform: rotateY(180deg); background: rgba(0,0,0,.14); }
@@ -274,17 +320,19 @@
 
     .ggTitle{
       margin:0 0 8px;
-      font-family:"Fraunces", serif;
-      font-size:28px;
-      letter-spacing:.2px;
+      font-family:"Press Start 2P", monospace;
+      font-size:20px;
+      letter-spacing:1px;
       color:rgba(234,240,255,.96);
+      text-shadow: 0 0 8px rgba(140,124,255,.4);
     }
 
     .ggText{
       margin:0 0 14px;
       color:var(--muted);
-      line-height:1.55;
-      font-size:14.5px;
+      line-height:1.4;
+      font-size:11px;
+      letter-spacing:.5px;
     }
 
     .ggRow{
@@ -292,6 +340,16 @@
       justify-content:flex-end;
       gap:12px;
       flex-wrap:wrap;
+    }
+
+    .modeFail{
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{ transform: translateX(0); }
+      25%{ transform: translateX(-4px); }
+      75%{ transform: translateX(4px); }
     }
   </style>
 </head>
@@ -305,37 +363,56 @@
       <div class="inner" id="landing">
         <h1>./ FIND GRAD PAIR</h1>
         <p>
-          Welcome to the game where you need to find pairs of grad pfp's. First of all, I want to say thank you to
-          <a href="https://x.com/miketwinks" target="_blank" rel="noreferrer noopener">j.mike</a>
-          for his BAAANGOOOOOR pfp's. Your task is very simple: find the matching pair for each PFP — that’s it. LFGRAD and enjoy.
+          WELCOME TO THE GAME, WHERE YOU NEED TO FIND PAIRS OF GRAD PFP'S.<br>
+          THANKS TO <a href="https://x.com/miketwinks" target="_blank" rel="noreferrer noopener">J.MIKE</a> FOR BAAANGOOOOOR PFPS. FIND MATCHING PAIR — LFGRAD!
         </p>
 
         <div class="row">
-          <button id="start">./ FIND PAIR</button>
+          <button id="classicModeBtn" class="mode">./ CLASSIC</button>
+          <button id="timeModeBtn" class="mode">./ TIME</button>
+          <button id="movesModeBtn" class="mode">./ MOVES</button>
         </div>
       </div>
 
       <div class="inner" id="game">
         <div class="top">
           <div>
-            <h2 id="levelTitle">Level 1</h2>
-            <p class="info" id="hud">Matched: 0 / 7</p>
+            <h2 id="levelTitle">LEVEL 1</h2>
+            <p class="info" id="hud">MATCHED: 0 / 7</p>
           </div>
+
+          <div class="stats">
+            <div class="stat" id="timerStat" style="display:none;">
+              <span class="statVal" id="timerValue">00:00</span>
+              <span class="statLabel">TIME</span>
+            </div>
+
+            <div class="stat" id="movesStat" style="display:none;">
+              <span class="statVal" id="movesValue">0</span>
+              <span class="statLabel">MOVES</span>
+            </div>
+
+            <div class="stat statWarn" id="limitStat" style="display:none;">
+              <span class="statVal" id="limitValue">20</span>
+              <span class="statLabel" id="limitLabel">ATTEMPTS</span>
+            </div>
+          </div>
+
           <div class="row" style="margin-top:0;">
-            <button id="restart">./ RESTART</button>
-            <button id="back">./ MENU</button>
+            <button id="restartBtn">./ RESTART</button>
+            <button id="backBtn">./ MENU</button>
           </div>
         </div>
 
         <div class="grid" id="grid"></div>
 
         <div class="nextWrap" id="nextWrap">
-          <button id="nextLevel" class="glow">./ NEXT</button>
+          <button id="nextLevelBtn" class="glow">./ NEXT</button>
         </div>
 
         <div class="meta">
-          <span id="mini">Find all pairs to unlock next level.</span>
-          <span id="lvl">Level: 1 / 4</span>
+          <span id="mini">FIND ALL PAIRS TO UNLOCK NEXT LEVEL.</span>
+          <span id="lvl">LEVEL: 1 / 4</span>
         </div>
       </div>
     </section>
@@ -343,271 +420,416 @@
 
   <div id="ggWrap" aria-hidden="true">
     <div class="ggPanel" role="dialog" aria-modal="true">
-      <h3 class="ggTitle">./ Good Game</h3>
-      <p class="ggText">Congratulations, you found all the pairs.</p>
+      <h3 class="ggTitle" id="ggTitle">./ GOOD GAME</h3>
+      <p class="ggText" id="ggText">CONGRATULATIONS, YOU FOUND ALL THE PAIRS.</p>
       <div class="ggRow">
-        <button id="ggMenu">./ MENU</button>
+        <button id="ggMenuBtn">./ MENU</button>
       </div>
     </div>
   </div>
 
-<script>
-  const bg = document.getElementById('bg');
-  const FLOATERS = [];
-  const COUNT = 28;
+  <script>
+    const bg = document.getElementById('bg');
+    const FLOATERS = [];
+    const COUNT = 28;
 
-  function rand(min, max){ return Math.random() * (max-min) + min; }
-
-  function initBackground(){
-    bg.innerHTML = "";
-    FLOATERS.length = 0;
-
-    for(let i=1;i<=COUNT;i++){
-      const el = document.createElement('img');
-      el.className = "floater";
-      el.alt = "";
-      el.decoding = "async";
-      el.loading = "eager";
-      el.src = `grad-${i}.png`;
-
-      const size = rand(74, 168);
-      el.style.width = size + "px";
-      el.style.height = size + "px";
-      el.style.opacity = (0.10 + Math.random() * 0.16).toFixed(3);
-
-      const f = {
-        el,
-        size,
-        x: rand(0, window.innerWidth),
-        y: rand(0, window.innerHeight),
-        vx: rand(-16, 16),
-        vy: rand(-16, 16),
-        w: rand(0, Math.PI * 2),
-        ws: rand(0.4, 1.1),
-        amp: rand(6, 22),
-      };
-
-      bg.appendChild(el);
-      FLOATERS.push(f);
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
     }
-  }
 
-  initBackground();
+    function initBackground() {
+      bg.innerHTML = '';
+      FLOATERS.length = 0;
 
-  let last = performance.now();
-  function loop(t){
-    const dt = Math.min(0.05, (t-last)/1000);
-    last = t;
+      for (let i = 1; i <= COUNT; i++) {
+        const el = document.createElement('img');
+        el.className = 'floater';
+        el.alt = '';
+        el.decoding = 'async';
+        el.loading = 'eager';
+        el.src = `grad-${i}.png`;
 
-    const W = window.innerWidth;
-    const H = window.innerHeight;
+        const size = rand(74, 168);
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+        el.style.opacity = (0.10 + Math.random() * 0.16).toFixed(3);
 
-    for(const f of FLOATERS){
-      f.w += dt * f.ws;
+        const floater = {
+          el,
+          size,
+          x: rand(0, window.innerWidth),
+          y: rand(0, window.innerHeight),
+          vx: rand(-16, 16),
+          vy: rand(-16, 16),
+          w: rand(0, Math.PI * 2),
+          ws: rand(0.4, 1.1),
+          amp: rand(6, 22)
+        };
 
-      f.x += f.vx * dt * 10;
-      f.y += f.vy * dt * 10;
+        bg.appendChild(el);
+        FLOATERS.push(floater);
+      }
+    }
 
-      const ox = Math.cos(f.w) * f.amp;
-      const oy = Math.sin(f.w * 0.9) * f.amp;
+    initBackground();
 
-      if (f.x < -f.size) f.x = W + f.size;
-      if (f.x > W + f.size) f.x = -f.size;
-      if (f.y < -f.size) f.y = H + f.size;
-      if (f.y > H + f.size) f.y = -f.size;
+    let last = performance.now();
 
-      f.el.style.transform = `translate3d(${(f.x+ox).toFixed(1)}px, ${(f.y+oy).toFixed(1)}px, 0)`;
+    function loop(t) {
+      const dt = Math.min(0.05, (t - last) / 1000);
+      last = t;
+
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+
+      for (const f of FLOATERS) {
+        f.w += dt * f.ws;
+        f.x += f.vx * dt * 10;
+        f.y += f.vy * dt * 10;
+
+        const ox = Math.cos(f.w) * f.amp;
+        const oy = Math.sin(f.w * 0.9) * f.amp;
+
+        if (f.x < -f.size) f.x = W + f.size;
+        if (f.x > W + f.size) f.x = -f.size;
+        if (f.y < -f.size) f.y = H + f.size;
+        if (f.y > H + f.size) f.y = -f.size;
+
+        f.el.style.transform = `translate3d(${(f.x + ox).toFixed(1)}px, ${(f.y + oy).toFixed(1)}px, 0)`;
+      }
+
+      requestAnimationFrame(loop);
     }
 
     requestAnimationFrame(loop);
-  }
+    window.addEventListener('resize', initBackground);
 
-  requestAnimationFrame(loop);
-  window.addEventListener('resize', initBackground);
+    const landing = document.getElementById('landing');
+    const game = document.getElementById('game');
 
-  const landing = document.getElementById('landing');
-  const game = document.getElementById('game');
+    const modeButtons = {
+      classic: document.getElementById('classicModeBtn'),
+      time: document.getElementById('timeModeBtn'),
+      moves: document.getElementById('movesModeBtn')
+    };
 
-  const startBtn = document.getElementById('start');
-  const restartBtn = document.getElementById('restart');
-  const backBtn = document.getElementById('back');
+    const restartBtn = document.getElementById('restartBtn');
+    const backBtn = document.getElementById('backBtn');
+    const grid = document.getElementById('grid');
 
-  const grid = document.getElementById('grid');
-  const levelTitle = document.getElementById('levelTitle');
-  const hud = document.getElementById('hud');
+    const levelTitle = document.getElementById('levelTitle');
+    const hud = document.getElementById('hud');
+    const timerValue = document.getElementById('timerValue');
+    const movesValue = document.getElementById('movesValue');
+    const limitValue = document.getElementById('limitValue');
+    const limitLabel = document.getElementById('limitLabel');
 
-  const nextWrap = document.getElementById('nextWrap');
-  const nextLevelBtn = document.getElementById('nextLevel');
-  const mini = document.getElementById('mini');
-  const lvl = document.getElementById('lvl');
+    const timerStat = document.getElementById('timerStat');
+    const movesStat = document.getElementById('movesStat');
+    const limitStat = document.getElementById('limitStat');
 
-  const ggWrap = document.getElementById('ggWrap');
-  const ggMenu = document.getElementById('ggMenu');
+    const nextWrap = document.getElementById('nextWrap');
+    const nextLevelBtn = document.getElementById('nextLevelBtn');
+    const mini = document.getElementById('mini');
+    const lvl = document.getElementById('lvl');
 
-  const LEVELS = [
-    { level: 1, imgs: [1,2,3,4,5,6,7] },
-    { level: 2, imgs: [8,9,10,11,12,13,14] },
-    { level: 3, imgs: [15,16,17,18,19,20,21] },
-    { level: 4, imgs: [22,23,24,25,26,27,28] },
-  ];
+    const ggWrap = document.getElementById('ggWrap');
+    const ggTitle = document.getElementById('ggTitle');
+    const ggText = document.getElementById('ggText');
+    const ggMenuBtn = document.getElementById('ggMenuBtn');
 
-  let levelIndex = 0;
-  let first = null;
-  let second = null;
-  let lock = false;
-  let matched = 0;
+    const LEVELS = [
+      { level: 1, imgs: [1, 2, 3, 4, 5, 6, 7] },
+      { level: 2, imgs: [8, 9, 10, 11, 12, 13, 14] },
+      { level: 3, imgs: [15, 16, 17, 18, 19, 20, 21] },
+      { level: 4, imgs: [22, 23, 24, 25, 26, 27, 28] }
+    ];
 
-  function shuffle(a){
-    for(let i=a.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [a[i],a[j]] = [a[j],a[i]];
-    }
-    return a;
-  }
+    const MODES = {
+      classic: { limit: Infinity, label: 'CLASSIC', limitLabel: 'MODE' },
+      time: { limit: 30, label: 'TIME', limitLabel: 'SEC' },
+      moves: { limit: 30, label: 'MOVES', limitLabel: 'ATTEMPTS' }
+    };
 
-  function setView(isGame){
-    landing.style.display = isGame ? "none" : "block";
-    game.style.display = isGame ? "block" : "none";
-  }
+    let currentMode = 'classic';
+    let levelIndex = 0;
+    let firstCard = null;
+    let secondCard = null;
+    let locked = false;
+    let matchedPairs = 0;
+    let moveCount = 0;
+    let timer = 0;
+    let timerId = null;
+    let currentLimit = 0;
+    let gameOver = false;
 
-  function updateHud(){
-    levelTitle.textContent = `Level ${LEVELS[levelIndex].level}`;
-    hud.textContent = `Matched: ${matched} / 7`;
-    lvl.textContent = `Level: ${LEVELS[levelIndex].level} / 4`;
-  }
-
-  function hideNext(){
-    nextWrap.style.display = "none";
-    mini.textContent = "Find all pairs to unlock next level.";
-  }
-
-  function showNext(){
-    nextWrap.style.display = "flex";
-    mini.textContent = "Level complete.";
-    if (levelIndex === LEVELS.length - 1) {
-      nextLevelBtn.textContent = "./ GG";
-    } else {
-      nextLevelBtn.textContent = "./ NEXT";
-    }
-  }
-
-  function buildLevel(){
-    first = null; second = null; lock = false;
-    matched = 0;
-    hideNext();
-    updateHud();
-
-    const ids = LEVELS[levelIndex].imgs;
-    const deck = shuffle([...ids, ...ids]);
-
-    grid.innerHTML = "";
-    for(const id of deck){
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "card";
-      btn.dataset.id = String(id);
-
-      btn.innerHTML = `
-        <div class="back">
-          <div class="mark">./ FIND<small>Tap to reveal</small></div>
-        </div>
-        <div class="front">
-          <img src="grad-${id}.png" alt="PFP" draggable="false">
-        </div>
-      `;
-
-      btn.addEventListener("click", () => onPick(btn));
-      grid.appendChild(btn);
-    }
-  }
-
-  function reveal(card){ card.classList.add("revealed"); }
-  function conceal(card){ card.classList.remove("revealed"); }
-
-  function onPick(card){
-    if (lock) return;
-    if (card.classList.contains("matched")) return;
-    if (card === first) return;
-
-    reveal(card);
-
-    if (!first){
-      first = card;
-      return;
+    function formatTime(totalSeconds) {
+      const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const s = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
     }
 
-    second = card;
-    lock = true;
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
-    const a = first.dataset.id;
-    const b = second.dataset.id;
+    function setView(isGameVisible) {
+      landing.style.display = isGameVisible ? 'none' : 'block';
+      game.style.display = isGameVisible ? 'block' : 'none';
+    }
 
-    if (a === b){
-      first.classList.add("matched","locked");
-      second.classList.add("matched","locked");
+    function stopTimer() {
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    }
 
-      matched++;
+    function resetRoundState() {
+      firstCard = null;
+      secondCard = null;
+      locked = false;
+      matchedPairs = 0;
+      moveCount = 0;
+      timer = 0;
+      gameOver = false;
+      stopTimer();
+    }
+
+    function startTimer() {
+      stopTimer();
+      timerId = setInterval(() => {
+        timer += 1;
+        updateHud();
+        checkLimit();
+      }, 1000);
+    }
+
+    function updateHud() {
+      const modeConfig = MODES[currentMode];
+      const used = currentMode === 'time' ? timer : moveCount;
+      const left = modeConfig.limit === Infinity ? 0 : Math.max(0, currentLimit - used);
+
+      levelTitle.textContent = `LEVEL ${LEVELS[levelIndex].level} (${modeConfig.label})`;
+      hud.textContent = `MATCHED: ${matchedPairs} / 7`;
+      lvl.textContent = `LEVEL: ${LEVELS[levelIndex].level} / 4`;
+
+      timerValue.textContent = formatTime(timer);
+      movesValue.textContent = String(moveCount);
+      limitValue.textContent = modeConfig.limit === Infinity ? '∞' : String(left);
+      limitLabel.textContent = modeConfig.limitLabel;
+
+      timerStat.style.display = currentMode === 'time' ? 'flex' : 'none';
+      movesStat.style.display = currentMode !== 'classic' ? 'flex' : 'none';
+      limitStat.style.display = currentMode !== 'classic' ? 'flex' : 'none';
+
+      limitStat.classList.remove('statWarn');
+
+      if (currentMode === 'time' && timer >= currentLimit - 5) {
+        limitStat.classList.add('statWarn');
+      }
+
+      if (currentMode === 'moves' && moveCount >= currentLimit - 2) {
+        limitStat.classList.add('statWarn');
+      }
+    }
+
+    function hideNext() {
+      nextWrap.style.display = 'none';
+      mini.textContent = 'FIND ALL PAIRS TO UNLOCK NEXT LEVEL.';
+    }
+
+    function showNext() {
+      nextWrap.style.display = 'flex';
+      mini.textContent = 'LEVEL COMPLETE.';
+      nextLevelBtn.textContent = levelIndex === LEVELS.length - 1 ? './ GG' : './ NEXT';
+    }
+
+    function buildLevel() {
+      resetRoundState();
+      hideNext();
+
+      currentLimit = MODES[currentMode].limit;
+      if (currentMode === 'time') {
+        startTimer();
+      }
+
       updateHud();
 
-      first = null; second = null; lock = false;
+      const ids = LEVELS[levelIndex].imgs;
+      const deck = shuffle([...ids, ...ids]);
 
-      if (matched === 7) showNext();
-      return;
+      grid.innerHTML = '';
+      grid.classList.remove('modeFail');
+
+      for (const id of deck) {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'card';
+        card.dataset.id = String(id);
+
+        card.innerHTML = `
+          <div class="back">
+            <div class="mark">./ FIND<small>TAP TO REVEAL</small></div>
+          </div>
+          <div class="front">
+            <img src="grad-${id}.png" alt="PFP" draggable="false">
+          </div>
+        `;
+
+        card.addEventListener('click', () => onPick(card));
+        grid.appendChild(card);
+      }
     }
 
-    setTimeout(() => {
-      conceal(first);
-      conceal(second);
-      first = null; second = null;
-      lock = false;
-    }, 520);
-  }
-
-  function openGG(){
-    ggWrap.style.display = "grid";
-    ggWrap.setAttribute("aria-hidden","false");
-  }
-
-  function closeGG(){
-    ggWrap.style.display = "none";
-    ggWrap.setAttribute("aria-hidden","true");
-  }
-
-  startBtn.addEventListener("click", () => {
-    levelIndex = 0;
-    closeGG();
-    setView(true);
-    buildLevel();
-  });
-
-  restartBtn.addEventListener("click", buildLevel);
-
-  backBtn.addEventListener("click", () => {
-    closeGG();
-    setView(false);
-  });
-
-  nextLevelBtn.addEventListener("click", () => {
-    if (matched !== 7) return;
-
-    if (levelIndex === LEVELS.length - 1){
-      openGG();
-      return;
+    function reveal(card) {
+      card.classList.add('revealed');
     }
 
-    levelIndex++;
-    buildLevel();
-  });
+    function conceal(card) {
+      card.classList.remove('revealed');
+    }
 
-  ggMenu.addEventListener("click", () => {
-    closeGG();
-    setView(false);
-  });
+    function openGG() {
+      ggWrap.style.display = 'grid';
+      ggWrap.setAttribute('aria-hidden', 'false');
+    }
 
-  ggWrap.addEventListener("click", (e) => {
-    if (e.target === ggWrap) closeGG();
-  });
-</script>
+    function closeGG() {
+      ggWrap.style.display = 'none';
+      ggWrap.setAttribute('aria-hidden', 'true');
+    }
+
+    function failGame() {
+      gameOver = true;
+      locked = true;
+      stopTimer();
+      grid.classList.add('modeFail');
+
+      setTimeout(() => {
+        ggTitle.textContent = './ GAME OVER';
+        ggText.textContent = `YOU REACHED THE ${MODES[currentMode].label} LIMIT!`;
+        openGG();
+      }, 800);
+    }
+
+    function checkLimit() {
+      if (gameOver || currentMode === 'classic') return;
+
+      const used = currentMode === 'time' ? timer : moveCount;
+      if (used >= currentLimit) {
+        failGame();
+      }
+    }
+
+    function checkWin() {
+      if (matchedPairs !== 7) return;
+
+      stopTimer();
+      showNext();
+    }
+
+    function onPick(card) {
+      if (locked || gameOver) return;
+      if (card.classList.contains('matched')) return;
+      if (card === firstCard) return;
+
+      reveal(card);
+
+      if (currentMode !== 'classic') {
+        moveCount += 1;
+        updateHud();
+      }
+
+      if (!firstCard) {
+        firstCard = card;
+        checkLimit();
+        return;
+      }
+
+      secondCard = card;
+      locked = true;
+
+      const firstId = firstCard.dataset.id;
+      const secondId = secondCard.dataset.id;
+
+      if (firstId === secondId) {
+        firstCard.classList.add('matched', 'locked');
+        secondCard.classList.add('matched', 'locked');
+
+        matchedPairs += 1;
+        updateHud();
+
+        firstCard = null;
+        secondCard = null;
+        locked = false;
+
+        checkWin();
+        checkLimit();
+        return;
+      }
+
+      setTimeout(() => {
+        conceal(firstCard);
+        conceal(secondCard);
+        firstCard = null;
+        secondCard = null;
+        locked = false;
+        checkLimit();
+      }, 520);
+    }
+
+    function startMode(mode) {
+      currentMode = mode;
+      levelIndex = 0;
+      closeGG();
+      setView(true);
+      buildLevel();
+    }
+
+    modeButtons.classic.addEventListener('click', () => startMode('classic'));
+    modeButtons.time.addEventListener('click', () => startMode('time'));
+    modeButtons.moves.addEventListener('click', () => startMode('moves'));
+
+    restartBtn.addEventListener('click', buildLevel);
+
+    backBtn.addEventListener('click', () => {
+      closeGG();
+      stopTimer();
+      setView(false);
+    });
+
+    nextLevelBtn.addEventListener('click', () => {
+      if (matchedPairs !== 7 || gameOver) return;
+
+      if (levelIndex === LEVELS.length - 1) {
+        ggTitle.textContent = './ GOOD GAME';
+        ggText.innerHTML = `CONGRATULATIONS!<br>COMPLETED ALL ${MODES[currentMode].label}<br>LEVELS IN ${formatTime(timer)}<br>WITH ${moveCount} MOVES.`;
+        openGG();
+        return;
+      }
+
+      levelIndex += 1;
+      buildLevel();
+    });
+
+    ggMenuBtn.addEventListener('click', () => {
+      closeGG();
+      stopTimer();
+      setView(false);
+    });
+
+    ggWrap.addEventListener('click', (e) => {
+      if (e.target === ggWrap) {
+        closeGG();
+      }
+    });
+  </script>
 </body>
 </html>
 
