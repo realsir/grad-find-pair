@@ -24,6 +24,7 @@
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+
     body{
       margin:0;
       color:var(--text);
@@ -41,19 +42,20 @@
 
     .floater{
       position:absolute;
-      width:120px; height:120px;
+      width:92px;
+      height:92px;
       border-radius:50%;
       object-fit:cover;
       overflow:hidden;
-      opacity:.18;
+      opacity:.12;
       will-change:transform;
       user-select:none;
       -webkit-user-drag:none;
-      border: 1px solid rgba(234,240,255,.14);
+      border: 1px solid rgba(234,240,255,.10);
       box-shadow:
-        0 10px 40px rgba(0,0,0,.25),
-        0 0 0 4px rgba(140,124,255,.06);
-      filter:saturate(1.08) contrast(1.03);
+        0 10px 30px rgba(0,0,0,.22),
+        0 0 0 3px rgba(140,124,255,.05);
+      filter:saturate(1.05) contrast(1.02);
     }
 
     .vignette{
@@ -78,6 +80,7 @@
 
     .panel{
       width:min(980px, 100%);
+      max-height:calc(100vh - 52px);
       background: linear-gradient(180deg, rgba(10,14,30,.78), rgba(6,8,18,.72));
       border:1px solid var(--stroke);
       border-radius:var(--r);
@@ -87,7 +90,11 @@
       overflow:hidden;
     }
 
-    .inner{ padding:26px; }
+    .inner{
+      padding:26px;
+      overflow:auto;
+      max-height:calc(100vh - 52px);
+    }
 
     h1{
       margin:0 0 10px;
@@ -108,6 +115,11 @@
       letter-spacing:1px;
     }
 
+    #landing p{
+      margin-inline:auto;
+      text-align:center;
+    }
+
     a{
       color:var(--text);
       text-decoration:none;
@@ -122,6 +134,12 @@
       gap:12px;
       flex-wrap:wrap;
       margin-top:16px;
+    }
+
+    .menuButtons{
+      justify-content:center;
+      align-items:center;
+      width:100%;
     }
 
     button{
@@ -141,7 +159,7 @@
       line-height:1.1;
       text-shadow: 0 0 4px rgba(0,0,0,.5);
       white-space: nowrap;
-      min-width: 120px;
+      min-width: 180px;
     }
 
     button:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.65); }
@@ -156,7 +174,6 @@
     button.mode{
       background: linear-gradient(180deg, rgba(71,230,162,.20), rgba(71,230,162,.08));
       border-color: rgba(71,230,162,.35);
-      min-width: 140px;
     }
 
     button.mode:hover{ border-color: rgba(71,230,162,.65); }
@@ -167,6 +184,43 @@
     }
 
     button.warn:hover{ border-color: rgba(255,171,71,.65); }
+
+    .menuSection{
+      margin-top:22px;
+    }
+
+    .menuDivider{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin:22px 0 14px;
+    }
+
+    .menuDivider::before,
+    .menuDivider::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background: linear-gradient(90deg, rgba(140,124,255,0), rgba(140,124,255,.45), rgba(140,124,255,0));
+    }
+
+    .menuDivider span{
+      color:rgba(234,240,255,.9);
+      font-size:10px;
+      letter-spacing:1.3px;
+      text-align:center;
+      white-space:nowrap;
+      text-shadow: 0 0 6px rgba(140,124,255,.25);
+    }
+
+    .sectionNote{
+      color:var(--muted);
+      font-size:10px;
+      letter-spacing:.8px;
+      line-height:1.5;
+      margin-bottom:4px;
+      text-align:center;
+    }
 
     .meta{
       margin-top:16px;
@@ -219,8 +273,13 @@
       gap:10px;
     }
 
-    @media (max-width: 860px){ .grid{ grid-template-columns: repeat(4, 1fr);} }
-    @media (max-width: 520px){ .grid{ grid-template-columns: repeat(3, 1fr);} }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: repeat(3, 1fr); }
+    }
 
     .card{
       aspect-ratio:1/1;
@@ -234,6 +293,7 @@
       padding:0;
       transition: transform .12s ease, border-color .12s ease;
       font-family:"Press Start 2P", monospace;
+      min-width:0;
     }
 
     .card:hover{ transform: translateY(-1px); border-color: rgba(140,124,255,.55); }
@@ -247,6 +307,7 @@
       backface-visibility:hidden;
       transition: transform 280ms ease;
       transform-style:preserve-3d;
+      border-radius:16px;
     }
 
     .back{
@@ -254,7 +315,6 @@
         radial-gradient(240px 160px at 30% 20%, rgba(140,124,255,.22) 0%, rgba(140,124,255,0) 55%),
         radial-gradient(240px 160px at 80% 80%, rgba(71,230,162,.14) 0%, rgba(71,230,162,0) 55%),
         linear-gradient(180deg, rgba(10,14,30,.80), rgba(6,8,18,.62));
-      border-radius:16px;
     }
 
     .mark{
@@ -276,8 +336,23 @@
       letter-spacing:.3px;
     }
 
-    .front{ transform: rotateY(180deg); background: rgba(0,0,0,.14); }
-    .card img{ width:100%; height:100%; object-fit:cover; }
+    .front{
+      transform: rotateY(180deg);
+      background: rgba(0,0,0,.14);
+      padding:4px;
+    }
+
+    .card img{
+      width:92%;
+      height:92%;
+      object-fit:contain;
+      object-position:center;
+      display:block;
+      margin:auto;
+      border-radius:10px;
+      image-rendering:auto;
+    }
+
     .card.revealed .back{ transform: rotateY(180deg); }
     .card.revealed .front{ transform: rotateY(0deg); }
 
@@ -333,6 +408,7 @@
       line-height:1.4;
       font-size:11px;
       letter-spacing:.5px;
+      white-space:pre-line;
     }
 
     .ggRow{
@@ -363,14 +439,36 @@
       <div class="inner" id="landing">
         <h1>./ FIND GRAD PAIR</h1>
         <p>
-          WELCOME TO THE GAME, WHERE YOU NEED TO FIND PAIRS OF GRAD PFP'S.<br>
-          THANKS TO <a href="https://x.com/miketwinks" target="_blank" rel="noreferrer noopener">J.MIKE</a> FOR BAAANGOOOOOR PFPS. FIND MATCHING PAIR — LFGRAD!
+          WELCOME TO THE GAME, WHERE YOU NEED TO FIND MATCHING PAIRS W/OG GRAD STICKERS AND J.MIKE PPF'S.<br>
+          BIG THANKS TO <a href="https://x.com/miketwinks" target="_blank" rel="noreferrer noopener">J.MIKE</a> FOR BANGOR PFP'S. LFGRAD ./
         </p>
 
-        <div class="row">
-          <button id="classicModeBtn" class="mode">./ CLASSIC</button>
-          <button id="timeModeBtn" class="mode">./ TIME</button>
-          <button id="movesModeBtn" class="mode">./ MOVES</button>
+        <div class="menuSection">
+          <div class="menuDivider">
+            <span>WITH J.MIKE PFP'S</span>
+          </div>
+          <p class="sectionNote">
+            MODES WITH THE J.MIKE PFP'S
+          </p>
+          <div class="row menuButtons">
+            <button class="mode startBtn" data-mode="classic" data-set="jmike">./ CLASSIC</button>
+            <button class="mode startBtn" data-mode="time" data-set="jmike">./ TIME</button>
+            <button class="mode startBtn" data-mode="moves" data-set="jmike">./ MOVES</button>
+          </div>
+        </div>
+
+        <div class="menuSection">
+          <div class="menuDivider">
+            <span>WITH GRAD STICKERS</span>
+          </div>
+          <p class="sectionNote">
+            MODES WITH GRAD ORIGINAL STICKER'S
+          </p>
+          <div class="row menuButtons">
+            <button class="mode startBtn" data-mode="classic" data-set="stickers">./ CLASSIC</button>
+            <button class="mode startBtn" data-mode="time" data-set="stickers">./ TIME</button>
+            <button class="mode startBtn" data-mode="moves" data-set="stickers">./ MOVES</button>
+          </div>
         </div>
       </div>
 
@@ -431,87 +529,11 @@
   <script>
     const bg = document.getElementById('bg');
     const FLOATERS = [];
-    const COUNT = 28;
-
-    function rand(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
-    function initBackground() {
-      bg.innerHTML = '';
-      FLOATERS.length = 0;
-
-      for (let i = 1; i <= COUNT; i++) {
-        const el = document.createElement('img');
-        el.className = 'floater';
-        el.alt = '';
-        el.decoding = 'async';
-        el.loading = 'eager';
-        el.src = `grad-${i}.png`;
-
-        const size = rand(74, 168);
-        el.style.width = `${size}px`;
-        el.style.height = `${size}px`;
-        el.style.opacity = (0.10 + Math.random() * 0.16).toFixed(3);
-
-        const floater = {
-          el,
-          size,
-          x: rand(0, window.innerWidth),
-          y: rand(0, window.innerHeight),
-          vx: rand(-16, 16),
-          vy: rand(-16, 16),
-          w: rand(0, Math.PI * 2),
-          ws: rand(0.4, 1.1),
-          amp: rand(6, 22)
-        };
-
-        bg.appendChild(el);
-        FLOATERS.push(floater);
-      }
-    }
-
-    initBackground();
-
-    let last = performance.now();
-
-    function loop(t) {
-      const dt = Math.min(0.05, (t - last) / 1000);
-      last = t;
-
-      const W = window.innerWidth;
-      const H = window.innerHeight;
-
-      for (const f of FLOATERS) {
-        f.w += dt * f.ws;
-        f.x += f.vx * dt * 10;
-        f.y += f.vy * dt * 10;
-
-        const ox = Math.cos(f.w) * f.amp;
-        const oy = Math.sin(f.w * 0.9) * f.amp;
-
-        if (f.x < -f.size) f.x = W + f.size;
-        if (f.x > W + f.size) f.x = -f.size;
-        if (f.y < -f.size) f.y = H + f.size;
-        if (f.y > H + f.size) f.y = -f.size;
-
-        f.el.style.transform = `translate3d(${(f.x + ox).toFixed(1)}px, ${(f.y + oy).toFixed(1)}px, 0)`;
-      }
-
-      requestAnimationFrame(loop);
-    }
-
-    requestAnimationFrame(loop);
-    window.addEventListener('resize', initBackground);
+    const BG_COUNT = 20;
 
     const landing = document.getElementById('landing');
     const game = document.getElementById('game');
-
-    const modeButtons = {
-      classic: document.getElementById('classicModeBtn'),
-      time: document.getElementById('timeModeBtn'),
-      moves: document.getElementById('movesModeBtn')
-    };
+    const startButtons = document.querySelectorAll('.startBtn');
 
     const restartBtn = document.getElementById('restartBtn');
     const backBtn = document.getElementById('backBtn');
@@ -538,12 +560,32 @@
     const ggText = document.getElementById('ggText');
     const ggMenuBtn = document.getElementById('ggMenuBtn');
 
-    const LEVELS = [
-      { level: 1, imgs: [1, 2, 3, 4, 5, 6, 7] },
-      { level: 2, imgs: [8, 9, 10, 11, 12, 13, 14] },
-      { level: 3, imgs: [15, 16, 17, 18, 19, 20, 21] },
-      { level: 4, imgs: [22, 23, 24, 25, 26, 27, 28] }
-    ];
+    const IMAGE_SETS = {
+      jmike: {
+        key: 'jmike',
+        title: "WITH J.MIKE PFP'S",
+        prefix: 'grad-',
+        suffix: '.png',
+        bgCount: 28,
+        levels: [
+          { level: 1, imgs: [1, 2, 3, 4, 5, 6, 7] },
+          { level: 2, imgs: [8, 9, 10, 11, 12, 13, 14] },
+          { level: 3, imgs: [15, 16, 17, 18, 19, 20, 21] },
+          { level: 4, imgs: [22, 23, 24, 25, 26, 27, 28] }
+        ]
+      },
+      stickers: {
+        key: 'stickers',
+        title: 'WITH GRAD STICKERS',
+        prefix: '',
+        suffix: '.png',
+        bgCount: 13,
+        levels: [
+          { level: 1, imgs: [1, 2, 3, 4, 5, 6, 7] },
+          { level: 2, imgs: [8, 9, 10, 11, 12, 13] }
+        ]
+      }
+    };
 
     const MODES = {
       classic: { limit: Infinity, label: 'CLASSIC', limitLabel: 'MODE' },
@@ -552,6 +594,7 @@
     };
 
     let currentMode = 'classic';
+    let currentSet = 'jmike';
     let levelIndex = 0;
     let firstCard = null;
     let secondCard = null;
@@ -562,6 +605,27 @@
     let timerId = null;
     let currentLimit = 0;
     let gameOver = false;
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function getSetConfig() {
+      return IMAGE_SETS[currentSet];
+    }
+
+    function getLevels() {
+      return getSetConfig().levels;
+    }
+
+    function getCurrentLevel() {
+      return getLevels()[levelIndex];
+    }
+
+    function getImageSrc(id) {
+      const set = getSetConfig();
+      return `${set.prefix}${id}${set.suffix}`;
+    }
 
     function formatTime(totalSeconds) {
       const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
@@ -612,12 +676,15 @@
 
     function updateHud() {
       const modeConfig = MODES[currentMode];
+      const levels = getLevels();
+      const currentLevel = getCurrentLevel();
+      const totalPairs = currentLevel.imgs.length;
       const used = currentMode === 'time' ? timer : moveCount;
       const left = modeConfig.limit === Infinity ? 0 : Math.max(0, currentLimit - used);
 
-      levelTitle.textContent = `LEVEL ${LEVELS[levelIndex].level} (${modeConfig.label})`;
-      hud.textContent = `MATCHED: ${matchedPairs} / 7`;
-      lvl.textContent = `LEVEL: ${LEVELS[levelIndex].level} / 4`;
+      levelTitle.textContent = `LEVEL ${currentLevel.level} (${modeConfig.label} / ${getSetConfig().title})`;
+      hud.textContent = `MATCHED: ${matchedPairs} / ${totalPairs}`;
+      lvl.textContent = `LEVEL: ${currentLevel.level} / ${levels.length}`;
 
       timerValue.textContent = formatTime(timer);
       movesValue.textContent = String(moveCount);
@@ -647,7 +714,7 @@
     function showNext() {
       nextWrap.style.display = 'flex';
       mini.textContent = 'LEVEL COMPLETE.';
-      nextLevelBtn.textContent = levelIndex === LEVELS.length - 1 ? './ GG' : './ NEXT';
+      nextLevelBtn.textContent = levelIndex === getLevels().length - 1 ? './ GG' : './ NEXT';
     }
 
     function buildLevel() {
@@ -661,7 +728,7 @@
 
       updateHud();
 
-      const ids = LEVELS[levelIndex].imgs;
+      const ids = getCurrentLevel().imgs;
       const deck = shuffle([...ids, ...ids]);
 
       grid.innerHTML = '';
@@ -678,7 +745,7 @@
             <div class="mark">./ FIND<small>TAP TO REVEAL</small></div>
           </div>
           <div class="front">
-            <img src="grad-${id}.png" alt="PFP" draggable="false">
+            <img src="${getImageSrc(id)}" alt="CARD IMAGE" draggable="false">
           </div>
         `;
 
@@ -728,8 +795,7 @@
     }
 
     function checkWin() {
-      if (matchedPairs !== 7) return;
-
+      if (matchedPairs !== getCurrentLevel().imgs.length) return;
       stopTimer();
       showNext();
     }
@@ -784,17 +850,21 @@
       }, 520);
     }
 
-    function startMode(mode) {
+    function startMode(mode, setName) {
       currentMode = mode;
+      currentSet = setName;
       levelIndex = 0;
       closeGG();
+      initBackground();
       setView(true);
       buildLevel();
     }
 
-    modeButtons.classic.addEventListener('click', () => startMode('classic'));
-    modeButtons.time.addEventListener('click', () => startMode('time'));
-    modeButtons.moves.addEventListener('click', () => startMode('moves'));
+    startButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        startMode(btn.dataset.mode, btn.dataset.set);
+      });
+    });
 
     restartBtn.addEventListener('click', buildLevel);
 
@@ -802,14 +872,20 @@
       closeGG();
       stopTimer();
       setView(false);
+      initBackground();
     });
 
     nextLevelBtn.addEventListener('click', () => {
-      if (matchedPairs !== 7 || gameOver) return;
+      if (matchedPairs !== getCurrentLevel().imgs.length || gameOver) return;
 
-      if (levelIndex === LEVELS.length - 1) {
+      if (levelIndex === getLevels().length - 1) {
         ggTitle.textContent = './ GOOD GAME';
-        ggText.innerHTML = `CONGRATULATIONS!<br>COMPLETED ALL ${MODES[currentMode].label}<br>LEVELS IN ${formatTime(timer)}<br>WITH ${moveCount} MOVES.`;
+        ggText.textContent =
+`CONGRATULATIONS!
+COMPLETED ALL ${MODES[currentMode].label}
+${getSetConfig().title}
+IN ${formatTime(timer)}
+WITH ${moveCount} MOVES.`;
         openGG();
         return;
       }
@@ -822,6 +898,7 @@
       closeGG();
       stopTimer();
       setView(false);
+      initBackground();
     });
 
     ggWrap.addEventListener('click', (e) => {
@@ -829,7 +906,75 @@
         closeGG();
       }
     });
+
+    function initBackground() {
+      bg.innerHTML = '';
+      FLOATERS.length = 0;
+
+      const set = getSetConfig();
+      const total = set.bgCount || BG_COUNT;
+
+      for (let i = 1; i <= total; i++) {
+        const el = document.createElement('img');
+        el.className = 'floater';
+        el.alt = '';
+        el.decoding = 'async';
+        el.loading = 'eager';
+        el.src = getImageSrc(i);
+
+        const size = rand(58, 118);
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+        el.style.opacity = (0.08 + Math.random() * 0.10).toFixed(3);
+
+        const floater = {
+          el,
+          size,
+          x: rand(0, window.innerWidth),
+          y: rand(0, window.innerHeight),
+          vx: rand(-12, 12),
+          vy: rand(-12, 12),
+          w: rand(0, Math.PI * 2),
+          ws: rand(0.35, 0.9),
+          amp: rand(4, 16)
+        };
+
+        bg.appendChild(el);
+        FLOATERS.push(floater);
+      }
+    }
+
+    let last = performance.now();
+
+    function loop(t) {
+      const dt = Math.min(0.05, (t - last) / 1000);
+      last = t;
+
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+
+      for (const f of FLOATERS) {
+        f.w += dt * f.ws;
+        f.x += f.vx * dt * 10;
+        f.y += f.vy * dt * 10;
+
+        const ox = Math.cos(f.w) * f.amp;
+        const oy = Math.sin(f.w * 0.9) * f.amp;
+
+        if (f.x < -f.size) f.x = W + f.size;
+        if (f.x > W + f.size) f.x = -f.size;
+        if (f.y < -f.size) f.y = H + f.size;
+        if (f.y > H + f.size) f.y = -f.size;
+
+        f.el.style.transform = `translate3d(${(f.x + ox).toFixed(1)}px, ${(f.y + oy).toFixed(1)}px, 0)`;
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    initBackground();
+    requestAnimationFrame(loop);
+    window.addEventListener('resize', initBackground);
   </script>
 </body>
 </html>
-
